@@ -1,0 +1,30 @@
+{
+  "appName": {
+    "message": "DOZO",
+    "description": ""
+  },
+  "appDesc": {
+    "message": "Monitor your students' browsing activity on their Chromebooks.",
+    "description":""
+  },
+  "placeholderUsername": {
+    "message": "username",
+    "description":""
+  },
+  "placeholderCode": {
+    "message": "code",
+    "description":""
+  },   
+  "stopSession": {
+    "message": "Stop the session",
+    "description":""
+  },  
+  "inputEmpty": {
+    "message": "Fields cannot be empty.",
+    "description":""
+  },
+  "inputForbidden": {
+    "message": "Allowed characters: upper case letters, lower case letters and -.",
+    "description":""
+  }
+}

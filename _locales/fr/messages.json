@@ -1,0 +1,23 @@
+{
+  "appName": {
+    "message": "DOZO"
+  },
+  "appDesc": {
+    "message": "Surveillez l'activité de navigation de vos élèves sur leur Chromebook"
+  },
+  "placeholderUsername": {
+    "message": "pseudo"
+  },
+  "placeholderCode": {
+    "message": "code"
+  },   
+  "stopSession": {
+    "message": "Arrêter la session"
+  },
+  "inputEmpty": {
+    "message": "Les champs ne peuvent pas être vides."
+  },  
+  "inputForbidden": {
+    "message": "Caractères autorisés : lettres majuscules, minuscules et -."
+  }  
+}
