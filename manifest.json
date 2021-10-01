@@ -2,7 +2,7 @@
 "name": "DOZO",
 "description": "__MSG_appDesc__",
 "default_locale": "en",
-"version": "0.7",
+"version": "0.8",
 "permissions": ["storage","alarms","tabs"],
 "options_page": "options.html",
 "background": {

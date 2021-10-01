@@ -16,23 +16,7 @@ chrome.runtime.onInstalled.addListener(() => {
 	chrome.alarms.create('refresh', { periodInMinutes: 1 });
 });
 
-
 chrome.alarms.onAlarm.addListener((alarm) => {
-
-	//blinking icon
-	//var bip = 0;
-	//window.setInterval(function() {
-	//	if (localStorage.getItem("app_username") !== null && localStorage.getItem("app_code") !== null) {
-	//		if (bip == 0) {
-	//			chrome.action.setIcon({path: 'icons/icon32_on.png'});
-	//			bip = 1;
-	//		} else {
-	//			chrome.action.setIcon({path: 'icons/icon32.png'});
-	//			bip = 0;
-	//		}
-	//	}
-	//}
-	//, 1000);
 
 	console.log('background - ok');
 
@@ -45,6 +29,9 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 		if (typeof res.app_username !== 'undefined' && typeof res.app_code !== 'undefined' && typeof res.app_token !== 'undefined'){
 
 			console.log('sending...');
+
+			// ICON ON
+			chrome.action.setIcon({path: 'icons/icon32_on.png'});
 
 			// WINDOWS
 			chrome.windows.getAll({"populate":true}, function(windows) {
@@ -63,8 +50,9 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 				});
 
-				// LANG
+				// LANG - PAS DISPO DANS MV3 ENCORE
 				//let lang = chrome.i18n.getMessage('@@ui_locale');
+				//console.log("background - lang : " + lang);
 
 				// DATA
 				let data = '{"app_lang":"fr","app_focus":'+focus+',"app_username":"'+res.app_username+'","app_token":"'+res.app_token+'","app_code":"'+res.app_code+'","tabs":[' + tabs_list.toString() + ']}';
