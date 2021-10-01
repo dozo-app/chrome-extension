@@ -44,10 +44,12 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 					window.tabs.forEach(function(tab){
 						tabs_list.push('"' + encodeURIComponent(tab.url) + '"');
 					});
+					
+					// FOCUS
+					if (window.focused) focus = 1;
 				});
 
-				// FOCUS
-				if (window.focused) focus = 1;
+
 
 				// LANG - PAS DISPO DANS MV3 ENCORE
 				//let lang = chrome.i18n.getMessage('@@ui_locale');
