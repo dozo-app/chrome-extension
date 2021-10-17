@@ -1,5 +1,9 @@
 'use strict';
 
+chrome.action.onClicked.addListener(() => {
+	chrome.runtime.openOptionsPage()
+})
+
 function date(){
 	var d = new Date();
 	return d.getFullYear() + "/" +
@@ -72,8 +76,8 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 									console.log("background - " + date() + " - Session running");
 								}
 								if (typeof item.action != "undefined" && item.action == "session_stop") {
-									chrome.storage.local.remove(["app_username","app_code"],function(){
-									    console.log("app_username and app_code removed");
+									chrome.storage.local.remove(["app_code"],function(){
+									    console.log("app_code removed");
 									})
 									chrome.action.setIcon({path: 'icons/icon32.png'});
 

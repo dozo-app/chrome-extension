@@ -8,27 +8,56 @@
 		<!-- Bootstrap CSS -->
 		<link href="app.css" rel="stylesheet" />
 		<link href="custom.css" rel="stylesheet" />
-		
+
 		<!-- Fonts -->
 		<link rel="dns-prefetch" href="//fonts.gstatic.com">
-		<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">		
-		
+		<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+
 		<title>DOZO</title>
 	</head>
+
 	<body>
-		<div class="app pt-5">   
+
+		<div class="app p-3">
+
+
+
 			<div class="container">
-				<div class="row"> 
-					<div class="col text-center"> 
-				
-					<a href="https://www.dozo.app/"><img src="img/dozo.svg" width="100" /></a>
-					<br />
-					<br />
-					<a href="https://www.dozo.app/" style="text-decoration:none;">www.dozo.app</a>
-				
+				<div class="row">
+					<div class="col text-center">
+						<img src="img/dozo.svg" width="80" />
 					</div>
 				</div><!-- row -->
-			</div><!-- container -->	
-		</div><!-- app -->			
+			</div><!-- container -->
+
+			<div class="container">
+				<div class="row">
+					<div class="col-md-2 offset-md-5 mt-5">
+
+						<div id="session_open" style="width:100%;">
+							<div class="text-monospace small" style="color:silver">__MSG_placeholderUsername__</div>
+							<input id="session_open_user" type="text" class="form-control form-control-sm mb-2" />
+							<div class="text-monospace small" style="color:silver">__MSG_placeholderCode__</div>
+							<input id="session_open_code" type="text" class="form-control form-control-sm mb-2" />
+							<div id="console"></div>
+							<button id="session_open_submit" type="submit" class="btn btn-dark btn-sm pl-3 pr-3"><img src="img/check.svg" width="14" /></button>
+						</div>
+
+						<form id="session_close" style="display:none;width:100%;" class="text-center">
+							<div class="text-monopace text-danger mb-1">__MSG_stopSession__</div>
+							<button id="session_close_submit" type="submit" class="btn btn-danger btn-sm pl-3 pr-3"><img src="img/close.svg" width="14" /></button>
+						</form>
+
+					</div>
+					<div class="col-md-3 offset-md-1 mt-5">
+						<img src="img/puzzle.svg" width="12" /><a id="manage_extensions" class="text-monospace text-muted small" style="text-decoration:none;cursor:pointer"> __MSG_manageExtensions__</a>
+					</div>
+
+				</div><!-- row -->
+			</div><!-- container -->
+		</div><!-- app -->
+
+		<script src="options.js"></script>
+
 	</body>
 </html>

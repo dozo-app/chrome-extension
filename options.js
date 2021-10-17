@@ -23,66 +23,88 @@ function localizeHtmlPage()
 }
 localizeHtmlPage();
 
-var app_username;
-var app_code;
-var app_token;
+var dozo_username;
+var dozo_code;
+var dozo_token;
 
-chrome.storage.local.get(["app_username","app_code","app_token"], function (res){
+// remove old varaibles
+chrome.storage.local.remove("app_username");
+chrome.storage.local.remove("app_code");
+chrome.storage.local.remove("app_token");
+
+// get number of enabled extensions
+chrome.management.getAll(function(extensions) {
+    var nb_enabled_ext = 0
+    extensions.forEach(function(extension) {
+        if (extension.type == "extension" && extension.enabled) nb_enabled_ext++;
+    });
+    // console
+    console.log("nb_enabled_ext : " + nb_enabled_ext);
+});
+
+manage_extensions.onclick = function() {
+    chrome.tabs.create({ url: "chrome://extensions/" });
+}
+
+chrome.storage.local.get(["dozo_username","dozo_code","dozo_token"], function (res){
 
     // APP_TOKEN
-    if (typeof res.app_token === "undefined"){
-        app_token = (Math.random()+1).toString(36).substring(2);
-        chrome.storage.local.set({"app_token":app_token});
-        // CONSOLE
+    if (typeof res.dozo_token === "undefined"){
+        dozo_token = (Math.random()+1).toString(36).substring(2) + (Math.random()+1).toString(36).substring(2) + (Math.random()+1).toString(36).substring(2);
+        chrome.storage.local.set({"dozo_token":dozo_token});
+        // console
         console.log("token created");
     } else {
-        app_token = res.app_token;
+        dozo_token = res.dozo_token;
     }
 
-    // check if app_username and app_code are in localStorage
-    if (typeof res.app_username !== 'undefined' && typeof res.app_code !== 'undefined'){
+    // check if dozo_username and dozo_code are in localStorage
+    if (typeof res.dozo_code !== 'undefined'){
     	document.getElementById("session_open").style.display = "none";
     	document.getElementById("session_close").style.display = "block";
 
-    	// CONSOLE
-    	console.log("popup - session opened");
+    	// console
+    	console.log("options - session opened");
 
     } else {
     	chrome.action.setIcon({path: 'icons/icon32.png'});
     	document.getElementById("session_open").style.display = "block";
     	document.getElementById("session_close").style.display = "none";
+        if (typeof res.dozo_username !== 'undefined'){
+            document.getElementById("session_open_user").placeholder = res.dozo_username;
+        }
 
-    	// CONSOLE
-    	console.log("popup - start new session");
+
+    	// console
+    	console.log("options - start new session");
     }
 
-    console.log('popup - app_username : ' + res.app_username);
-    console.log('popup - app_code : ' + res.app_code);
-    console.log('popup - app_token : ' + app_token);
+    console.log('options - dozo_username : ' + res.dozo_username);
+    console.log('options - dozo_code : ' + res.dozo_code);
+    console.log('options - dozo_token : ' + dozo_token);
 
     // CLOSE SESSION
     session_close_submit.onclick = function() {
     	chrome.action.setIcon({path: 'icons/icon32.png'});
-        chrome.storage.local.remove("app_username");
-        chrome.storage.local.remove("app_code");
+        chrome.storage.local.remove("dozo_code");
 
-    	// CONSOLE
-    	console.log("popup - session closed");
+    	// console
+    	console.log("options - session closed");
     };
 
-    // open session
+    // OPEN SESSION
     session_open_submit.onclick = function() {
 
-    	let input_app_username = document.getElementById('session_open_user').value;
-    	let input_app_code = document.getElementById('session_open_code').value;
+    	let input_dozo_username = document.getElementById('session_open_user').value;
+    	let input_dozo_code = document.getElementById('session_open_code').value;
 
-        // CONSOLE
-        console.log("input_app_username : " + input_app_username);
-        console.log("input_app_code : " + input_app_code);
+        // console
+        console.log("input_dozo_username : " + input_dozo_username);
+        console.log("input_dozo_code : " + input_dozo_code);
 
-        if (input_app_username != "" && input_app_code != "") {
+        if (input_dozo_username != "" && input_dozo_code != "") {
 
-    		if(!/^[A-Za-z]+[A-Za-z-]+[A-Za-z]+$/i.test(input_app_username)) {
+    		if(!/^[A-Za-z]+[A-Za-z-]+[A-Za-z]+$/i.test(input_dozo_username)) {
     				document.getElementById("console").innerHTML = "<div class='pb-3 text-monospace small text-danger'>"+chrome.i18n.getMessage("inputForbidden")+"</div>";
     		} else {
 
@@ -103,7 +125,7 @@ chrome.storage.local.get(["app_username","app_code","app_token"], function (res)
     				let lang = chrome.i18n.getMessage('@@ui_locale');
 
     				// DATA
-    				let data = '{"app_lang":"'+lang+'","app_focus":'+1+',"app_username":"'+input_app_username+'","app_token":"'+app_token+'","app_code":"'+input_app_code+'","tabs":[' + tabs_list.toString() + ']}'
+    				let data = '{"app_lang":"'+lang+'","app_focus":'+1+',"app_username":"'+input_dozo_username+'","app_token":"'+dozo_token+'","app_code":"'+input_dozo_code+'","nb_enabled_ext":"'+nb_enabled_ext+'", "tabs":[' + tabs_list.toString() + ']}'
 
     				var xhr = new XMLHttpRequest();
     				xhr.open("POST", "https://www.dozo.app/hub", true);
@@ -120,11 +142,11 @@ chrome.storage.local.get(["app_username","app_code","app_token"], function (res)
     						if (typeof response.action != "undefined" && response.action == "session_ok"){
 
     							// SAVE DATA IN LOCAl STORAGE
-                                chrome.storage.local.set({"app_username":input_app_username}, function() {
-                                    console.log('username is set to ' + input_app_username);
+                                chrome.storage.local.set({"dozo_username":input_dozo_username}, function() {
+                                    console.log('username is set to ' + input_dozo_username);
                                 });
-                                chrome.storage.local.set({"app_code":input_app_code}, function() {
-                                    console.log('code is set to ' + input_app_username);
+                                chrome.storage.local.set({"dozo_code":input_dozo_code}, function() {
+                                    console.log('code is set to ' + input_dozo_username);
                                 });
 
                                 // ICON ON
