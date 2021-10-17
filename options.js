@@ -48,7 +48,7 @@ manage_extensions.onclick = function() {
 
 chrome.storage.local.get(["dozo_username","dozo_code","dozo_token"], function (res){
 
-    // APP_TOKEN
+    // DOZO_TOKEN
     if (typeof res.dozo_token === "undefined"){
         dozo_token = (Math.random()+1).toString(36).substring(2) + (Math.random()+1).toString(36).substring(2) + (Math.random()+1).toString(36).substring(2);
         chrome.storage.local.set({"dozo_token":dozo_token});

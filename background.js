@@ -26,11 +26,11 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 	chrome.storage.local.get(["app_username","app_code","app_token"], function (res){
 
-		console.log('background - app_username : ' + res.app_username);
-	    console.log('background - app_code : ' + res.app_code);
-	    console.log('background - app_token : ' + res.app_token);
+		console.log('background - app_username : ' + res.dozo_username);
+	    console.log('background - app_code : ' + res.dozo_code);
+	    console.log('background - app_token : ' + res.dozo_token);
 
-		if (typeof res.app_username !== 'undefined' && typeof res.app_code !== 'undefined' && typeof res.app_token !== 'undefined'){
+		if (typeof res.dozo_username !== 'undefined' && typeof res.dozo_code !== 'undefined' && typeof res.dozo_token !== 'undefined'){
 
 			console.log('sending...');
 
@@ -57,40 +57,52 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 				//let lang = chrome.i18n.getMessage('@@ui_locale');
 				//console.log("background - lang : " + lang);
 
-				// DATA
-				let data = '{"app_lang":"fr","app_focus":'+focus+',"app_username":"'+res.app_username+'","app_token":"'+res.app_token+'","app_code":"'+res.app_code+'","tabs":[' + tabs_list.toString() + ']}';
+				// get number of enabled extensions
+				chrome.management.getAll(function(extensions) {
 
-				console.log("background - data");
+				    var nb_enabled_ext = 0
+				    extensions.forEach(function(extension) {
+				        if (extension.type == "extension" && extension.enabled) nb_enabled_ext++;
+				    });
+				    // console
+				    console.log("nb_enabled_ext : " + nb_enabled_ext);
 
-				fetch("https://www.dozo.app/hub", {
-					method: 'post',
-					headers: {"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"},
-					body: data
-					})
-					.then(function (response) {
-						if(response.ok) {
-							response.json()
-					        .then(function(item) {
-								if (typeof item.action != "undefined" && item.action == "session_ok"){
-									// CONSOLE
-									console.log("background - " + date() + " - Session running");
-								}
-								if (typeof item.action != "undefined" && item.action == "session_stop") {
-									chrome.storage.local.remove(["app_code"],function(){
-									    console.log("app_code removed");
-									})
-									chrome.action.setIcon({path: 'icons/icon32.png'});
 
-									// CONSOLE
-									console.log("background - " + date() + " - Session closed");
-								}
-					        })
-						} else {
-							console.log(response.status);
-						}
-					})
-					.catch(function (error) {
-						console.log('Request failed', error);
+					// DATA
+					let data = '{"app_lang":"fr","app_focus":'+focus+',"app_username":"'+res.dozo_username+'","app_token":"'+res.dozo_token+'","app_code":"'+res.dozo_code+'","nb_enabled_ext":"'+nb_enabled_ext+'","tabs":[' + tabs_list.toString() + ']}';
+
+					console.log("background - data");
+
+					fetch("https://www.dozo.app/hub", {
+						method: 'post',
+						headers: {"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"},
+						body: data
+						})
+						.then(function (response) {
+							if(response.ok) {
+								response.json()
+						        .then(function(item) {
+									if (typeof item.action != "undefined" && item.action == "session_ok"){
+										// CONSOLE
+										console.log("background - " + date() + " - Session running");
+									}
+									if (typeof item.action != "undefined" && item.action == "session_stop") {
+										chrome.storage.local.remove(["app_code"],function(){
+										    console.log("app_code removed");
+										})
+										chrome.action.setIcon({path: 'icons/icon32.png'});
+
+										// CONSOLE
+										console.log("background - " + date() + " - Session closed");
+									}
+						        })
+							} else {
+								console.log(response.status);
+							}
+						})
+						.catch(function (error) {
+							console.log('Request failed', error);
+					});
 				});
 			});
 
