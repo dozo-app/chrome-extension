@@ -24,7 +24,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 	console.log('background - ok');
 
-	chrome.storage.local.get(["app_username","app_code","app_token"], function (res){
+	chrome.storage.local.get(["dozo_username","dozo_code","dozo_token"], function (res){
 
 		console.log('background - app_username : ' + res.dozo_username);
 	    console.log('background - app_code : ' + res.dozo_code);

@@ -12,7 +12,7 @@
         "message": "code"
     },
     "stopSession": {
-        "message": "Arrêter la session"
+        "message": "ARRÊTER LA SESSION"
     },
     "inputEmpty": {
         "message": "Les champs ne peuvent pas être vides."

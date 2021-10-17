@@ -32,16 +32,6 @@ chrome.storage.local.remove("app_username");
 chrome.storage.local.remove("app_code");
 chrome.storage.local.remove("app_token");
 
-// get number of enabled extensions
-chrome.management.getAll(function(extensions) {
-    var nb_enabled_ext = 0
-    extensions.forEach(function(extension) {
-        if (extension.type == "extension" && extension.enabled) nb_enabled_ext++;
-    });
-    // console
-    console.log("nb_enabled_ext : " + nb_enabled_ext);
-});
-
 manage_extensions.onclick = function() {
     chrome.tabs.create({ url: "chrome://extensions/" });
 }
@@ -71,9 +61,8 @@ chrome.storage.local.get(["dozo_username","dozo_code","dozo_token"], function (r
     	document.getElementById("session_open").style.display = "block";
     	document.getElementById("session_close").style.display = "none";
         if (typeof res.dozo_username !== 'undefined'){
-            document.getElementById("session_open_user").placeholder = res.dozo_username;
+            document.getElementById("session_open_user").value = res.dozo_username;
         }
-
 
     	// console
     	console.log("options - start new session");
@@ -124,42 +113,52 @@ chrome.storage.local.get(["dozo_username","dozo_code","dozo_token"], function (r
     				// LANG
     				let lang = chrome.i18n.getMessage('@@ui_locale');
 
-    				// DATA
-    				let data = '{"app_lang":"'+lang+'","app_focus":'+1+',"app_username":"'+input_dozo_username+'","app_token":"'+dozo_token+'","app_code":"'+input_dozo_code+'","nb_enabled_ext":"'+nb_enabled_ext+'", "tabs":[' + tabs_list.toString() + ']}'
+                    // get number of enabled extensions
+                    chrome.management.getAll(function(extensions) {
+                        var nb_enabled_ext = 0
+                        extensions.forEach(function(extension) {
+                            if (extension.type == "extension" && extension.enabled) nb_enabled_ext++;
+                        });
+                        // console
+                        console.log("nb_enabled_ext : " + nb_enabled_ext);
 
-    				var xhr = new XMLHttpRequest();
-    				xhr.open("POST", "https://www.dozo.app/hub", true);
-    				xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    				xhr.onreadystatechange = function() {
-    					if (xhr.readyState == 4) {
 
-    						var response = JSON.parse(xhr.responseText);
+        				// DATA
+        				let data = '{"app_lang":"'+lang+'","app_focus":'+1+',"app_username":"'+input_dozo_username+'","app_token":"'+dozo_token+'","app_code":"'+input_dozo_code+'","nb_enabled_ext":"'+nb_enabled_ext+'", "tabs":[' + tabs_list.toString() + ']}'
 
-    						if (typeof response.message !== "undefined"){
-    							document.getElementById("console").innerHTML = response.message;
-    						}
+        				var xhr = new XMLHttpRequest();
+        				xhr.open("POST", "https://www.dozo.app/hub", true);
+        				xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        				xhr.onreadystatechange = function() {
+        					if (xhr.readyState == 4) {
 
-    						if (typeof response.action != "undefined" && response.action == "session_ok"){
+        						var response = JSON.parse(xhr.responseText);
 
-    							// SAVE DATA IN LOCAl STORAGE
-                                chrome.storage.local.set({"dozo_username":input_dozo_username}, function() {
-                                    console.log('username is set to ' + input_dozo_username);
-                                });
-                                chrome.storage.local.set({"dozo_code":input_dozo_code}, function() {
-                                    console.log('code is set to ' + input_dozo_username);
-                                });
+        						if (typeof response.message !== "undefined"){
+        							document.getElementById("console").innerHTML = response.message;
+        						}
 
-                                // ICON ON
-                                chrome.action.setIcon({path: 'icons/icon32_on.png'});
+        						if (typeof response.action != "undefined" && response.action == "session_ok"){
 
-    							// CLOSE POPUP
-    							window.close();
-    						}
+        							// SAVE DATA IN LOCAl STORAGE
+                                    chrome.storage.local.set({"dozo_username":input_dozo_username}, function() {
+                                        console.log('username is set to ' + input_dozo_username);
+                                    });
+                                    chrome.storage.local.set({"dozo_code":input_dozo_code}, function() {
+                                        console.log('code is set to ' + input_dozo_username);
+                                    });
 
-    					}
-    				}
-    				xhr.send(data);
+                                    // ICON ON
+                                    chrome.action.setIcon({path: 'icons/icon32_on.png'});
 
+        							// CLOSE POPUP
+        							window.close();
+        						}
+
+        					}
+        				}
+        				xhr.send(data);
+                    });   
     			});
 
     		}
